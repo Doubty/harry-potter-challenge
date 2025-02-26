@@ -9,13 +9,16 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
     const [favorites, setFavorites] = useState<Character[]>(() => {
         // load favorites from localStorage
-        const storedFavorites = localStorage.getItem('favorites');
+        const storedFavorites = typeof window !== 'undefined' ? localStorage.getItem('favorites') : "";
         return storedFavorites ? JSON.parse(storedFavorites) : [];
     });
 
     useEffect(() => {
         // save favorites when changed
-        localStorage.setItem('favorites', JSON.stringify(favorites));
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+        }
+
     }, [favorites]);
 
     const toggleFavorite = (character: Character) => {
